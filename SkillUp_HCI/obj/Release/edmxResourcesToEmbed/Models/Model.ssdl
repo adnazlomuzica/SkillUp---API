@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SkillUpModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Kategorija">
+    <Key>
+      <PropertyRef Name="KategorijaID" />
+    </Key>
+    <Property Name="KategorijaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Naziv" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Korisnici">
+    <Key>
+      <PropertyRef Name="KorisnikID" />
+    </Key>
+    <Property Name="KorisnikID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Ime" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Prezime" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="KorisnickoIme" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Lozinka" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Odgovori">
+    <Key>
+      <PropertyRef Name="OdgovorID" />
+    </Key>
+    <Property Name="OdgovorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Odgovor" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Tacan" Type="bit" Nullable="false" />
+    <Property Name="PitanjeID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Pitanje">
+    <Key>
+      <PropertyRef Name="PitanjeID" />
+    </Key>
+    <Property Name="PitanjeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TestID" Type="int" Nullable="false" />
+    <Property Name="PitanjeTekst" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Bod" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Test">
+    <Key>
+      <PropertyRef Name="TestID" />
+    </Key>
+    <Property Name="TestID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="KategorijaID" Type="int" Nullable="false" />
+    <Property Name="BrojPitanja" Type="int" Nullable="false" />
+    <Property Name="Naziv" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="UradjeniTestovi">
+    <Key>
+      <PropertyRef Name="UradjeniTest" />
+    </Key>
+    <Property Name="UradjeniTest" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TestID" Type="int" Nullable="false" />
+    <Property Name="KorisnikID" Type="int" Nullable="false" />
+    <Property Name="Rezultat" Type="float" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Kategorija">
+    <End Role="Kategorija" Type="Self.Kategorija" Multiplicity="1" />
+    <End Role="Test" Type="Self.Test" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Kategorija">
+        <PropertyRef Name="KategorijaID" />
+      </Principal>
+      <Dependent Role="Test">
+        <PropertyRef Name="KategorijaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Korisnik">
+    <End Role="Korisnici" Type="Self.Korisnici" Multiplicity="1" />
+    <End Role="UradjeniTestovi" Type="Self.UradjeniTestovi" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Korisnici">
+        <PropertyRef Name="KorisnikID" />
+      </Principal>
+      <Dependent Role="UradjeniTestovi">
+        <PropertyRef Name="KorisnikID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Pitanje">
+    <End Role="Pitanje" Type="Self.Pitanje" Multiplicity="1" />
+    <End Role="Odgovori" Type="Self.Odgovori" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Pitanje">
+        <PropertyRef Name="PitanjeID" />
+      </Principal>
+      <Dependent Role="Odgovori">
+        <PropertyRef Name="PitanjeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Test">
+    <End Role="Test" Type="Self.Test" Multiplicity="1" />
+    <End Role="Pitanje" Type="Self.Pitanje" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test">
+        <PropertyRef Name="TestID" />
+      </Principal>
+      <Dependent Role="Pitanje">
+        <PropertyRef Name="TestID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestKorisnik">
+    <End Role="Test" Type="Self.Test" Multiplicity="1" />
+    <End Role="UradjeniTestovi" Type="Self.UradjeniTestovi" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Test">
+        <PropertyRef Name="TestID" />
+      </Principal>
+      <Dependent Role="UradjeniTestovi">
+        <PropertyRef Name="TestID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="su_SelectAllCategories" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="su_SelectTestsByCategory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="KategorijaID" Type="int" Mode="In" />
+  </Function>
+  <EntityContainer Name="SkillUpModelStoreContainer">
+    <EntitySet Name="Kategorija" EntityType="Self.Kategorija" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Korisnici" EntityType="Self.Korisnici" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Odgovori" EntityType="Self.Odgovori" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Pitanje" EntityType="Self.Pitanje" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Test" EntityType="Self.Test" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UradjeniTestovi" EntityType="Self.UradjeniTestovi" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Kategorija" Association="Self.FK_Kategorija">
+      <End Role="Kategorija" EntitySet="Kategorija" />
+      <End Role="Test" EntitySet="Test" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Korisnik" Association="Self.FK_Korisnik">
+      <End Role="Korisnici" EntitySet="Korisnici" />
+      <End Role="UradjeniTestovi" EntitySet="UradjeniTestovi" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Pitanje" Association="Self.FK_Pitanje">
+      <End Role="Pitanje" EntitySet="Pitanje" />
+      <End Role="Odgovori" EntitySet="Odgovori" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Test" Association="Self.FK_Test">
+      <End Role="Test" EntitySet="Test" />
+      <End Role="Pitanje" EntitySet="Pitanje" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestKorisnik" Association="Self.FK_TestKorisnik">
+      <End Role="Test" EntitySet="Test" />
+      <End Role="UradjeniTestovi" EntitySet="UradjeniTestovi" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

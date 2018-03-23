@@ -1,0 +1,442 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SkillUpModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Kategorija">
+          <Key>
+            <PropertyRef Name="KategorijaID" />
+          </Key>
+          <Property Name="KategorijaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Naziv" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Korisnici">
+          <Key>
+            <PropertyRef Name="KorisnikID" />
+          </Key>
+          <Property Name="KorisnikID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Prezime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="KorisnickoIme" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Lozinka" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Odgovori">
+          <Key>
+            <PropertyRef Name="OdgovorID" />
+          </Key>
+          <Property Name="OdgovorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Odgovor" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Tacan" Type="bit" Nullable="false" />
+          <Property Name="PitanjeID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Pitanje">
+          <Key>
+            <PropertyRef Name="PitanjeID" />
+          </Key>
+          <Property Name="PitanjeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TestID" Type="int" Nullable="false" />
+          <Property Name="PitanjeTekst" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Bod" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Test">
+          <Key>
+            <PropertyRef Name="TestID" />
+          </Key>
+          <Property Name="TestID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KategorijaID" Type="int" Nullable="false" />
+          <Property Name="BrojPitanja" Type="int" Nullable="false" />
+          <Property Name="Naziv" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="UradjeniTestovi">
+          <Key>
+            <PropertyRef Name="UradjeniTest" />
+          </Key>
+          <Property Name="UradjeniTest" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TestID" Type="int" Nullable="false" />
+          <Property Name="KorisnikID" Type="int" Nullable="false" />
+          <Property Name="Rezultat" Type="float" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Kategorija">
+          <End Role="Kategorija" Type="Self.Kategorija" Multiplicity="1" />
+          <End Role="Test" Type="Self.Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kategorija">
+              <PropertyRef Name="KategorijaID" />
+            </Principal>
+            <Dependent Role="Test">
+              <PropertyRef Name="KategorijaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Korisnik">
+          <End Role="Korisnici" Type="Self.Korisnici" Multiplicity="1" />
+          <End Role="UradjeniTestovi" Type="Self.UradjeniTestovi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnici">
+              <PropertyRef Name="KorisnikID" />
+            </Principal>
+            <Dependent Role="UradjeniTestovi">
+              <PropertyRef Name="KorisnikID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pitanje">
+          <End Role="Pitanje" Type="Self.Pitanje" Multiplicity="1" />
+          <End Role="Odgovori" Type="Self.Odgovori" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pitanje">
+              <PropertyRef Name="PitanjeID" />
+            </Principal>
+            <Dependent Role="Odgovori">
+              <PropertyRef Name="PitanjeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Test">
+          <End Role="Test" Type="Self.Test" Multiplicity="1" />
+          <End Role="Pitanje" Type="Self.Pitanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="Pitanje">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestKorisnik">
+          <End Role="Test" Type="Self.Test" Multiplicity="1" />
+          <End Role="UradjeniTestovi" Type="Self.UradjeniTestovi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="UradjeniTestovi">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="su_SelectAllCategories" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="su_SelectTestsByCategory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KategorijaID" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="SkillUpModelStoreContainer">
+          <EntitySet Name="Kategorija" EntityType="Self.Kategorija" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Korisnici" EntityType="Self.Korisnici" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Odgovori" EntityType="Self.Odgovori" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pitanje" EntityType="Self.Pitanje" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Test" EntityType="Self.Test" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UradjeniTestovi" EntityType="Self.UradjeniTestovi" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Kategorija" Association="Self.FK_Kategorija">
+            <End Role="Kategorija" EntitySet="Kategorija" />
+            <End Role="Test" EntitySet="Test" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Korisnik" Association="Self.FK_Korisnik">
+            <End Role="Korisnici" EntitySet="Korisnici" />
+            <End Role="UradjeniTestovi" EntitySet="UradjeniTestovi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pitanje" Association="Self.FK_Pitanje">
+            <End Role="Pitanje" EntitySet="Pitanje" />
+            <End Role="Odgovori" EntitySet="Odgovori" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Test" Association="Self.FK_Test">
+            <End Role="Test" EntitySet="Test" />
+            <End Role="Pitanje" EntitySet="Pitanje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestKorisnik" Association="Self.FK_TestKorisnik">
+            <End Role="Test" EntitySet="Test" />
+            <End Role="UradjeniTestovi" EntitySet="UradjeniTestovi" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SkillUpModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Kategorija">
+          <Key>
+            <PropertyRef Name="KategorijaID" />
+          </Key>
+          <Property Name="KategorijaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Test" Relationship="Self.FK_Kategorija" FromRole="Kategorija" ToRole="Test" />
+        </EntityType>
+        <EntityType Name="Korisnici">
+          <Key>
+            <PropertyRef Name="KorisnikID" />
+          </Key>
+          <Property Name="KorisnikID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Prezime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="KorisnickoIme" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Lozinka" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UradjeniTestovi" Relationship="Self.FK_Korisnik" FromRole="Korisnici" ToRole="UradjeniTestovi" />
+        </EntityType>
+        <EntityType Name="Odgovori">
+          <Key>
+            <PropertyRef Name="OdgovorID" />
+          </Key>
+          <Property Name="OdgovorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Odgovor" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Tacan" Type="Boolean" Nullable="false" />
+          <Property Name="PitanjeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Pitanje" Relationship="Self.FK_Pitanje" FromRole="Odgovori" ToRole="Pitanje" />
+        </EntityType>
+        <EntityType Name="Pitanje">
+          <Key>
+            <PropertyRef Name="PitanjeID" />
+          </Key>
+          <Property Name="PitanjeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TestID" Type="Int32" Nullable="false" />
+          <Property Name="PitanjeTekst" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Bod" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Odgovori" Relationship="Self.FK_Pitanje" FromRole="Pitanje" ToRole="Odgovori" />
+          <NavigationProperty Name="Test" Relationship="Self.FK_Test" FromRole="Pitanje" ToRole="Test" />
+        </EntityType>
+        <EntityType Name="Test">
+          <Key>
+            <PropertyRef Name="TestID" />
+          </Key>
+          <Property Name="TestID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KategorijaID" Type="Int32" Nullable="false" />
+          <Property Name="BrojPitanja" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Kategorija" Relationship="Self.FK_Kategorija" FromRole="Test" ToRole="Kategorija" />
+          <NavigationProperty Name="Pitanje" Relationship="Self.FK_Test" FromRole="Test" ToRole="Pitanje" />
+          <NavigationProperty Name="UradjeniTestovi" Relationship="Self.FK_TestKorisnik" FromRole="Test" ToRole="UradjeniTestovi" />
+          <Property Name="Naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UradjeniTestovi">
+          <Key>
+            <PropertyRef Name="UradjeniTest" />
+          </Key>
+          <Property Name="UradjeniTest" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TestID" Type="Int32" Nullable="false" />
+          <Property Name="KorisnikID" Type="Int32" Nullable="false" />
+          <Property Name="Rezultat" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Korisnici" Relationship="Self.FK_Korisnik" FromRole="UradjeniTestovi" ToRole="Korisnici" />
+          <NavigationProperty Name="Test" Relationship="Self.FK_TestKorisnik" FromRole="UradjeniTestovi" ToRole="Test" />
+        </EntityType>
+        <Association Name="FK_Kategorija">
+          <End Role="Kategorija" Type="Self.Kategorija" Multiplicity="1" />
+          <End Role="Test" Type="Self.Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kategorija">
+              <PropertyRef Name="KategorijaID" />
+            </Principal>
+            <Dependent Role="Test">
+              <PropertyRef Name="KategorijaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Korisnik">
+          <End Role="Korisnici" Type="Self.Korisnici" Multiplicity="1" />
+          <End Role="UradjeniTestovi" Type="Self.UradjeniTestovi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnici">
+              <PropertyRef Name="KorisnikID" />
+            </Principal>
+            <Dependent Role="UradjeniTestovi">
+              <PropertyRef Name="KorisnikID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pitanje">
+          <End Role="Pitanje" Type="Self.Pitanje" Multiplicity="1" />
+          <End Role="Odgovori" Type="Self.Odgovori" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pitanje">
+              <PropertyRef Name="PitanjeID" />
+            </Principal>
+            <Dependent Role="Odgovori">
+              <PropertyRef Name="PitanjeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Test">
+          <End Role="Test" Type="Self.Test" Multiplicity="1" />
+          <End Role="Pitanje" Type="Self.Pitanje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="Pitanje">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestKorisnik">
+          <End Role="Test" Type="Self.Test" Multiplicity="1" />
+          <End Role="UradjeniTestovi" Type="Self.UradjeniTestovi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Test">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="UradjeniTestovi">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SkillUpEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Kategorija" EntityType="Self.Kategorija" />
+          <EntitySet Name="Korisnici" EntityType="Self.Korisnici" />
+          <EntitySet Name="Odgovori" EntityType="Self.Odgovori" />
+          <EntitySet Name="Pitanje" EntityType="Self.Pitanje" />
+          <EntitySet Name="Test" EntityType="Self.Test" />
+          <EntitySet Name="UradjeniTestovi" EntityType="Self.UradjeniTestovi" />
+          <AssociationSet Name="FK_Kategorija" Association="Self.FK_Kategorija">
+            <End Role="Kategorija" EntitySet="Kategorija" />
+            <End Role="Test" EntitySet="Test" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Korisnik" Association="Self.FK_Korisnik">
+            <End Role="Korisnici" EntitySet="Korisnici" />
+            <End Role="UradjeniTestovi" EntitySet="UradjeniTestovi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pitanje" Association="Self.FK_Pitanje">
+            <End Role="Pitanje" EntitySet="Pitanje" />
+            <End Role="Odgovori" EntitySet="Odgovori" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Test" Association="Self.FK_Test">
+            <End Role="Test" EntitySet="Test" />
+            <End Role="Pitanje" EntitySet="Pitanje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestKorisnik" Association="Self.FK_TestKorisnik">
+            <End Role="Test" EntitySet="Test" />
+            <End Role="UradjeniTestovi" EntitySet="UradjeniTestovi" />
+          </AssociationSet>
+          <FunctionImport Name="su_SelectAllCategories" ReturnType="Collection(SkillUpModel.Kategorija_Result)" />
+          <FunctionImport Name="su_SelectTestsByCategory" ReturnType="Collection(SkillUpModel.Test_Result)">
+            <Parameter Name="KategorijaID" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="su_SelectAllCategories_Result">
+          <Property Type="Int32" Name="KategorijaID" Nullable="false" />
+          <Property Type="String" Name="Naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="Kategorija_Result">
+          <Property Type="Int32" Name="KategorijaID" Nullable="false" />
+          <Property Type="String" Name="Naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="su_SelectTestsByCategory_Result">
+          <Property Type="Int32" Name="TestID" Nullable="false" />
+          <Property Type="String" Name="Naziv" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="TestID1" Nullable="false" />
+          <Property Type="Int32" Name="KategorijaID" Nullable="false" />
+          <Property Type="Int32" Name="BrojPitanja" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Test_Result">
+          <Property Type="Int32" Name="TestID" Nullable="false" />
+          <Property Type="String" Name="Naziv" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="KategorijaID" Nullable="false" />
+          <Property Type="Int32" Name="BrojPitanja" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SkillUpModelStoreContainer" CdmEntityContainer="SkillUpEntities">
+          <EntitySetMapping Name="Kategorija">
+            <EntityTypeMapping TypeName="SkillUpModel.Kategorija">
+              <MappingFragment StoreEntitySet="Kategorija">
+                <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Korisnici">
+            <EntityTypeMapping TypeName="SkillUpModel.Korisnici">
+              <MappingFragment StoreEntitySet="Korisnici">
+                <ScalarProperty Name="KorisnikID" ColumnName="KorisnikID" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="KorisnickoIme" ColumnName="KorisnickoIme" />
+                <ScalarProperty Name="Lozinka" ColumnName="Lozinka" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Odgovori">
+            <EntityTypeMapping TypeName="SkillUpModel.Odgovori">
+              <MappingFragment StoreEntitySet="Odgovori">
+                <ScalarProperty Name="OdgovorID" ColumnName="OdgovorID" />
+                <ScalarProperty Name="Odgovor" ColumnName="Odgovor" />
+                <ScalarProperty Name="Tacan" ColumnName="Tacan" />
+                <ScalarProperty Name="PitanjeID" ColumnName="PitanjeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pitanje">
+            <EntityTypeMapping TypeName="SkillUpModel.Pitanje">
+              <MappingFragment StoreEntitySet="Pitanje">
+                <ScalarProperty Name="PitanjeID" ColumnName="PitanjeID" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="PitanjeTekst" ColumnName="PitanjeTekst" />
+                <ScalarProperty Name="Bod" ColumnName="Bod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Test">
+            <EntityTypeMapping TypeName="SkillUpModel.Test">
+              <MappingFragment StoreEntitySet="Test">
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+                <ScalarProperty Name="BrojPitanja" ColumnName="BrojPitanja" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UradjeniTestovi">
+            <EntityTypeMapping TypeName="SkillUpModel.UradjeniTestovi">
+              <MappingFragment StoreEntitySet="UradjeniTestovi">
+                <ScalarProperty Name="UradjeniTest" ColumnName="UradjeniTest" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="KorisnikID" ColumnName="KorisnikID" />
+                <ScalarProperty Name="Rezultat" ColumnName="Rezultat" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="su_SelectAllCategories" FunctionName="SkillUpModel.Store.su_SelectAllCategories">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="SkillUpModel.Kategorija_Result">
+                <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="su_SelectTestsByCategory" FunctionName="SkillUpModel.Store.su_SelectTestsByCategory">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="SkillUpModel.Test_Result">
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+                <ScalarProperty Name="BrojPitanja" ColumnName="BrojPitanja" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

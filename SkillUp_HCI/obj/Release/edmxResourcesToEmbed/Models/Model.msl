@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SkillUpModelStoreContainer" CdmEntityContainer="SkillUpEntities">
+    <EntitySetMapping Name="Kategorija">
+      <EntityTypeMapping TypeName="SkillUpModel.Kategorija">
+        <MappingFragment StoreEntitySet="Kategorija">
+          <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+          <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Korisnici">
+      <EntityTypeMapping TypeName="SkillUpModel.Korisnici">
+        <MappingFragment StoreEntitySet="Korisnici">
+          <ScalarProperty Name="KorisnikID" ColumnName="KorisnikID" />
+          <ScalarProperty Name="Ime" ColumnName="Ime" />
+          <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="KorisnickoIme" ColumnName="KorisnickoIme" />
+          <ScalarProperty Name="Lozinka" ColumnName="Lozinka" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Odgovori">
+      <EntityTypeMapping TypeName="SkillUpModel.Odgovori">
+        <MappingFragment StoreEntitySet="Odgovori">
+          <ScalarProperty Name="OdgovorID" ColumnName="OdgovorID" />
+          <ScalarProperty Name="Odgovor" ColumnName="Odgovor" />
+          <ScalarProperty Name="Tacan" ColumnName="Tacan" />
+          <ScalarProperty Name="PitanjeID" ColumnName="PitanjeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Pitanje">
+      <EntityTypeMapping TypeName="SkillUpModel.Pitanje">
+        <MappingFragment StoreEntitySet="Pitanje">
+          <ScalarProperty Name="PitanjeID" ColumnName="PitanjeID" />
+          <ScalarProperty Name="TestID" ColumnName="TestID" />
+          <ScalarProperty Name="PitanjeTekst" ColumnName="PitanjeTekst" />
+          <ScalarProperty Name="Bod" ColumnName="Bod" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Test">
+      <EntityTypeMapping TypeName="SkillUpModel.Test">
+        <MappingFragment StoreEntitySet="Test">
+          <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+          <ScalarProperty Name="TestID" ColumnName="TestID" />
+          <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+          <ScalarProperty Name="BrojPitanja" ColumnName="BrojPitanja" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UradjeniTestovi">
+      <EntityTypeMapping TypeName="SkillUpModel.UradjeniTestovi">
+        <MappingFragment StoreEntitySet="UradjeniTestovi">
+          <ScalarProperty Name="UradjeniTest" ColumnName="UradjeniTest" />
+          <ScalarProperty Name="TestID" ColumnName="TestID" />
+          <ScalarProperty Name="KorisnikID" ColumnName="KorisnikID" />
+          <ScalarProperty Name="Rezultat" ColumnName="Rezultat" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="su_SelectAllCategories" FunctionName="SkillUpModel.Store.su_SelectAllCategories">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="SkillUpModel.Kategorija_Result">
+          <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+          <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="su_SelectTestsByCategory" FunctionName="SkillUpModel.Store.su_SelectTestsByCategory">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="SkillUpModel.Test_Result">
+          <ScalarProperty Name="TestID" ColumnName="TestID" />
+          <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+          <ScalarProperty Name="KategorijaID" ColumnName="KategorijaID" />
+          <ScalarProperty Name="BrojPitanja" ColumnName="BrojPitanja" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>
